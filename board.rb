@@ -1,4 +1,6 @@
 class Board
+  attr_reader :geusses, :answer
+
   def initialize(answer)
     @answer = answer
     @geusses = 0
@@ -6,12 +8,16 @@ class Board
 
   def geuss(com)
     @geusses += 1
-    return nil if @geusses > 12
 
     array = com.split('').map!(&:to_i)
-    [check_win(array),
+    [array,
+     check_win(array),
      check_corrects(array),
      check_color(array)]
+  end
+
+  def out_of_geuss
+    @geusses > 11
   end
 
   private
@@ -25,6 +31,11 @@ class Board
   end
 
   def check_color(array)
-    array.select { |item| @answer.include?(item) }.count - check_corrects(array)
+    ans = Marshal.load(Marshal.dump(@answer))
+    array.select do |item|
+      is = ans.include?(item)
+      ans.delete_at(ans.find_index(item)) if is
+      is
+    end.count - check_corrects(array)
   end
 end
