@@ -1,1 +1,4 @@
-require_relative 'instruction'
+require_relative 'instructions'
+
+Instructions.print
+Instructions.any_key
